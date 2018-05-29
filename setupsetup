@@ -1,0 +1,25 @@
+import os, sys
+
+asdf = (sys.argv[1])
+print(asdf)
+asdfU = os.path.basename(asdf.replace(".py",""))
+print(asdfU)
+
+
+OUT = "C:\\Users\\jpaddick\Desktop\\cx_Freez\\setup.py"
+
+f = open(OUT,"w")
+
+f.write("import sys \n")
+f.write("from cx_Freeze import setup, Executable \n")
+f.write("\n")
+f.write("base = None\n")
+f.write("\n")
+f.write("setup(  name =\"" + asdfU + "\", \n")
+f.write("\tversion = \"1.0\",\n")
+f.write("\tdescription = \"\" ,\n")
+f.write("\texecutables = [Executable(\"" + asdf.replace("\\","/") + "\")])\n")
+
+f.close()
+
+print("Setup Created")
