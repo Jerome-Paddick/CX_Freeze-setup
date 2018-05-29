@@ -1,0 +1,9 @@
+@Echo off
+Title Freezing
+
+RD /S /Q "[FILEPATH]\build"
+python "[FILEPATH]\setupsetup.py" %1
+python "[FILEPATH]\setup.py" build
+
+
+pause
