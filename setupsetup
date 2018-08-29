@@ -1,25 +1,52 @@
 import os, sys
 
-asdf = (sys.argv[1])
-print(asdf)
-asdfU = os.path.basename(asdf.replace(".py",""))
-print(asdfU)
+input_location = sys.argv[1].replace("\\","/")
+input_dir = os.path.dirname(input_location)
+
+current_dir = os.path.abspath(os.path.dirname(sys.argv[0])).replace("\\","/")
+
+filename = os.path.basename(input_location.replace(".py",""))
 
 
-OUT = "C:\\Users\\jpaddick\Desktop\\cx_Freez\\setup.py"
+print("filename:", filename)
+print("current_dir:", current_dir)
 
-f = open(OUT,"w")
 
-f.write("import sys \n")
-f.write("from cx_Freeze import setup, Executable \n")
-f.write("\n")
-f.write("base = None\n")
-f.write("\n")
-f.write("setup(  name =\"" + asdfU + "\", \n")
-f.write("\tversion = \"1.0\",\n")
-f.write("\tdescription = \"\" ,\n")
-f.write("\texecutables = [Executable(\"" + asdf.replace("\\","/") + "\")])\n")
+setup = rf"""
+import sys
+from cx_Freeze import setup, Executable
+        
+base = None
+
+setup(name = "{filename}",
+options = {{"build_exe": {{"packages":["idna"]}}}},
+version = "1.0",
+description = "" ,
+executables = [Executable("{input_location}")])
+"""
+
+
+print(rf"{input_dir}/setup.py")
+
+with open(rf"{input_dir}/setup.py", "w") as f:
+    f.write(setup)
 
 f.close()
 
 print("Setup Created")
+
+# Windows has only ONE standard output stream
+# --> cannot write to console and to file simultaneously for logging purposes
+# --> would need to write to file using python program
+# --> running the exe through this will at least help catch errors in initialising the exe by having a pause command after the file is run
+
+batfile = rf"""
+@echo off
+"{filename}.exe"
+pause
+"""
+
+with open(current_dir + "/debug.bat", "w") as f:
+    f.write(batfile)
+
+print("Batfile Created")
