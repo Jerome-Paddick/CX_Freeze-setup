@@ -1,9 +1,44 @@
 @Echo off
+
+:: "%cd%\ is current working directory ie. the one from where you drag a file
+:: "%0" is path to this script
+:: "%~dp0" dir of this script
+
+echo %cd%
+
 Title Freezing
 
-RD /S /Q "[FILEPATH]\build"
-python "[FILEPATH]\setupsetup.py" %1
-python "[FILEPATH]\setup.py" build
+Echo Starting Freeze
+Echo.
+Echo Current Dependancies: & forfiles /p "%~dp0Dependancies" 
+Echo.
 
+Echo Deleting Existing build
+RD /S /Q "%~dp0build"
+Echo.
+
+python "%~dp0setupsetup.py" %1
+python "%cd%\setup.py" build
+del "%cd%\setup.py"
+
+::echo debug source
+::echo "%~dp0debug.bat"
+::echo debug destination
+::echo "%cd%\build\exe.win32-3.6"
+move "%~dp0debug.bat" "%cd%\build\exe.win32-3.6"
+echo.
+
+copy "%~dp0Dependancies\*.*" "%cd%\build\exe.win32-3.6"
+
+Echo.
+Echo.  ^^  ^^
+Echo. \____/
+Echo.
+
+cd "%cd%\build\exe.win32-3.6"
+Echo Starting exe for testing:
+Echo.
+echo "%cd%\build\exe.win32-3.6\debug.bat"
+call "debug.bat"
 
 pause
